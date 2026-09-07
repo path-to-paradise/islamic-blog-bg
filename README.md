@@ -1,4 +1,4 @@
-# Нур и Знание — Islamic Blog (Bulgarian)
+# Светлина и знание — Islamic Blog (Bulgarian)
 
 The Bulgarian-language version of the Islamic blog. This is a **completely separate, isolated project** — its own repo, its own git history, its own Google Analytics property (see below) — not connected to the English site in any way. Content is translated, not synced; editing one does not affect the other.
 
