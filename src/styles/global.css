@@ -433,43 +433,30 @@ main {
   color: var(--color-text-muted);
 }
 
-.search-input-wrap {
-  position: relative;
-  margin: 0.5rem 0 1rem;
-}
-
-.search-input-wrap .search-icon {
-  position: absolute;
-  left: 1.15rem;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 18px;
-  height: 18px;
-  color: var(--color-text-muted);
-  pointer-events: none;
-  transition: color 0.2s ease;
-}
-
-.search-input-wrap:focus-within .search-icon {
-  color: var(--color-primary);
-}
-
-.search-input {
+/* The /search page's search bar reuses .header-search as its base component (same
+   shape, spacing, icon, and button) via this modifier, which only overrides what
+   genuinely needs to differ: full width instead of a fixed compact width, and
+   theme-aware colors instead of the header's fixed off-white (the header always
+   sits on the fixed dark-green banner; this one sits on the page's own light/dark
+   background). Every child rule under .header-search keys off these same custom
+   properties, so overriding them here is enough to re-theme the whole component. */
+.header-search--page {
+  --hs-text: var(--color-text);
+  --hs-text-muted: var(--color-text-muted);
   width: 100%;
-  font: inherit;
-  font-size: 1.05rem;
-  padding: 0.9rem 1.2rem 0.9rem 3.1rem;
-  border: 1px solid var(--color-border);
-  border-radius: 999px;
+  margin: 0.5rem 0 1rem;
   background: var(--color-surface);
-  color: var(--color-text);
+  border-color: var(--color-border);
   box-shadow: var(--shadow-xs);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.search-input:focus {
-  outline: none;
-  border-color: var(--color-primary);
+.header-search--page:hover {
+  transform: none;
+  box-shadow: var(--shadow-xs);
+}
+
+.header-search--page:focus-within {
+  width: 100%;
   box-shadow: 0 0 0 4px var(--color-accent-soft);
 }
 
