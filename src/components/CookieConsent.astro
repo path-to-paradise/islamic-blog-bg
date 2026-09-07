@@ -1,0 +1,104 @@
+---
+// This site is a fully separate property from the English site, so it needs its own
+// GA4 measurement ID — reusing the English one would mix both sites' traffic together.
+// Create a new GA4 property/data stream for this site and paste its ID here.
+const GA_MEASUREMENT_ID = "G-XXXXXXXXXX";
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const privacyHref = `${base}/privacy`;
+---
+
+<div class="cookie-banner" id="cookie-banner" hidden>
+  <p>
+    Използваме Google Analytics, за да разберем как се използва сайтът — нищо не се продава и
+    не се стартира анализ, докато не приемете. Прочетете нашата
+    <a href={privacyHref}>Политика за поверителност</a>.
+  </p>
+  <div class="cookie-banner-actions">
+    <button type="button" class="cookie-btn cookie-btn-decline" id="cookie-decline">Отказвам</button>
+    <button type="button" class="cookie-btn cookie-btn-accept" id="cookie-accept">Приемам</button>
+  </div>
+</div>
+
+<script define:vars={{ GA_MEASUREMENT_ID }}>
+  const STORAGE_KEY = "cookie-consent";
+
+  function getConsent() {
+    try {
+      return localStorage.getItem(STORAGE_KEY);
+    } catch {
+      return null;
+    }
+  }
+
+  function setConsent(value) {
+    try {
+      localStorage.setItem(STORAGE_KEY, value);
+    } catch {
+      /* localStorage unavailable (private browsing, blocked) — consent just won't persist */
+    }
+  }
+
+  function loadAnalytics(id) {
+    if (window.__gaLoaded) return;
+    window.__gaLoaded = true;
+
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${id}`;
+    document.head.appendChild(script);
+
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      window.dataLayer.push(arguments);
+    }
+    window.gtag = gtag;
+    gtag("js", new Date());
+    gtag("config", id);
+  }
+
+  const banner = document.getElementById("cookie-banner");
+  const acceptBtn = document.getElementById("cookie-accept");
+  const declineBtn = document.getElementById("cookie-decline");
+  const consent = getConsent();
+
+  function showBanner() {
+    banner?.removeAttribute("hidden");
+    if (banner) document.body.style.paddingBottom = `${banner.offsetHeight}px`;
+  }
+
+  function hideBanner() {
+    banner?.setAttribute("hidden", "");
+    document.body.style.paddingBottom = "";
+  }
+
+  if (consent === "accepted") {
+    loadAnalytics(GA_MEASUREMENT_ID);
+  } else if (consent === null) {
+    showBanner();
+  }
+
+  window.addEventListener("resize", () => {
+    if (banner && !banner.hasAttribute("hidden")) {
+      document.body.style.paddingBottom = `${banner.offsetHeight}px`;
+    }
+  });
+
+  acceptBtn?.addEventListener("click", () => {
+    setConsent("accepted");
+    loadAnalytics(GA_MEASUREMENT_ID);
+    hideBanner();
+  });
+
+  declineBtn?.addEventListener("click", () => {
+    setConsent("declined");
+    hideBanner();
+  });
+
+  document.addEventListener("click", (event) => {
+    const trigger = event.target instanceof Element ? event.target.closest("[data-cookie-preferences]") : null;
+    if (trigger) {
+      event.preventDefault();
+      showBanner();
+    }
+  });
+</script>

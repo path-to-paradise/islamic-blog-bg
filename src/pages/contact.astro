@@ -1,0 +1,18 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const CONTACT_EMAIL = "noorandknowledge@atomicmail.io";
+---
+
+<BaseLayout title="Контакти" description="Свържете се с Нур и Знание.">
+  <article class="post-content">
+    <h1>Контакти</h1>
+    <p>
+      Забелязахте грешка, имате поправка или тема, която искате да видите разгледана? Пишете ни —
+      всяко съобщение се чете.
+    </p>
+    <p>
+      <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+    </p>
+  </article>
+</BaseLayout>

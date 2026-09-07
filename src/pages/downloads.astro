@@ -1,0 +1,80 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+// sizeKb is set by hand (rather than read from disk at build time) so this page
+// has no Node built-in dependencies — some hosts bundle pages for a non-Node
+// runtime (e.g. Cloudflare Workers), where `node:fs` can't be resolved.
+// NOTE: the PDF files themselves still contain the original English placeholder
+// text (hand-rolled PDFs can't easily embed Cyrillic without a proper Unicode
+// font pipeline) — only the titles/descriptions on this page are translated.
+// Replace the files in public/downloads/ with real Bulgarian-language resources.
+const resources = [
+  {
+    file: "daily-prayer-tracker.pdf",
+    title: "Тракер за ежедневната молитва",
+    description: "Разпечатваем седмичен списък за петте ежедневни молитви.",
+    sizeKb: 2,
+  },
+  {
+    file: "gratitude-journal-prompts.pdf",
+    title: "Въпроси за дневник на благодарността",
+    description: "Десет въпроса за кратка ежедневна практика на благодарност.",
+    sizeKb: 2,
+  },
+  {
+    file: "ramadan-planning-worksheet.pdf",
+    title: "Работен лист за планиране на Рамадан",
+    description: "Едностраничен работен лист за планиране на месеца напред.",
+    sizeKb: 2,
+  },
+  {
+    file: "recommended-reading-list.pdf",
+    title: "Списък с препоръчано четиво",
+    description: "Шаблон за съставяне на собствен списък с доверени четива.",
+    sizeKb: 1,
+  },
+];
+---
+
+<BaseLayout title="Материали" description="Безплатни материали за изтегляне от Нур и Знание.">
+  <h1>Материали за изтегляне</h1>
+  <p class="search-intro">
+    Безплатни материали за печат — запазете ги, разпечатайте ги или ги използвайте като отправна
+    точка за свои собствени.
+  </p>
+
+  <ul class="download-list">
+    {resources.map((resource) => (
+      <li class="download-card">
+        <div class="download-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22">
+            <path
+              d="M6 2h9l5 5v15a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1Z"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linejoin="round"
+            />
+            <path d="M15 2v5h5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+            <path d="M8 13h8M8 16.5h8M8 9.5h3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+          </svg>
+        </div>
+        <div class="download-info">
+          <h2>{resource.title}</h2>
+          <p>{resource.description}</p>
+        </div>
+        <a class="download-btn" href={`${base}/downloads/${resource.file}`} download>
+          <span>Изтегли</span>
+          <span class="download-meta">PDF · {resource.sizeKb} KB</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+
+  <p class="search-intro" style="margin-top: 2rem;">
+    Това са примерни placeholder файлове (все още на английски) — заменете ги в
+    <code>public/downloads/</code> със свои собствени материали на български.
+  </p>
+</BaseLayout>

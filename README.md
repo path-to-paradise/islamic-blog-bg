@@ -1,0 +1,137 @@
+# Нур и Знание — Islamic Blog (Bulgarian)
+
+The Bulgarian-language version of the Islamic blog. This is a **completely separate, isolated project** — its own repo, its own git history, its own Google Analytics property (see below) — not connected to the English site in any way. Content is translated, not synced; editing one does not affect the other.
+
+A static, one-column Islamic blog built with [Astro](https://astro.build). No backend, no database — everything is Markdown files compiled to static HTML at build time. Deploys for free to GitHub Pages or Cloudflare Pages.
+
+## Features
+
+- One-column, mobile-friendly reading layout
+- Posts written in Markdown with frontmatter (title, description, date, author, tags)
+- "Load more posts" button on the homepage (loads 5 at a time, no backend/pagination routes needed)
+- Individual post pages with clean typography, including RTL support for Arabic text
+- Client-side search (`/search`) across post titles, descriptions, and tags — no backend needed
+- Downloads page (`/downloads`) for sharing printable resources (PDFs) alongside the blog
+- Google Analytics, gated behind a GDPR-style cookie consent banner — no analytics script loads until a visitor accepts
+- Dark mode (follows the reader's system setting)
+- 9 sample posts (translated from the English site) included so you can see the layout and Load More button in action
+
+## Getting started
+
+```bash
+npm install
+npm run dev
+```
+
+Then open `http://localhost:4322` (this project's dev server defaults to a different port than the English site's, in [`.claude/launch.json`](.claude/launch.json), so both can run side by side).
+
+## Adding a new post
+
+Create a new `.md` file in `src/content/posts/`, named with a transliterated (Latin-script) slug — this becomes the URL, and Cyrillic in URLs is technically possible but not recommended. E.g. `src/content/posts/moyata-nova-publikatsiya.md`:
+
+```markdown
+---
+title: "Заглавие на публикацията"
+description: "Едно или две изречения обобщение, показвано на началната страница."
+pubDate: 2026-09-10
+author: "Вашето име"
+tags: ["Поклонение", "Размисъл"]
+---
+
+Напишете съдържанието на публикацията тук с обикновен Markdown — заглавия, списъци,
+**удебелен текст**, *курсив* и > цитати — всичко работи.
+```
+
+The post automatically appears on the homepage (newest first) and gets its own page at `/posts/moyata-nova-publikatsiya`.
+
+- Set `draft: true` in the frontmatter to hide a post without deleting it.
+- To change the "Load more" batch size, edit `PAGE_SIZE` in [`src/pages/index.astro`](src/pages/index.astro).
+
+### Adding Arabic text
+
+Wrap Arabic text in a paragraph with the `arabic` class to get right-to-left layout and a matching font:
+
+```html
+<p class="arabic">الْحَمْدُ لِلَّهِ</p>
+```
+
+### Adding a download
+
+The `/downloads` page lists resources from [`src/pages/downloads.astro`](src/pages/downloads.astro). To add one:
+
+1. Drop the file (e.g. a PDF) into [`public/downloads/`](public/downloads).
+2. Add an entry to the `resources` array at the top of `src/pages/downloads.astro` with its filename, title, description, and size in KB (shown on the download button).
+
+The four PDFs included are placeholder samples reused from the English site, so **their file content is still in English** — hand-rolled PDFs can't easily embed Cyrillic without a proper Unicode font pipeline. Only the titles/descriptions on the `/downloads` page itself are translated. Replace the files with real Bulgarian-language resources when you have them.
+
+## Analytics & cookie consent
+
+Google Analytics is wired up in [`src/components/CookieConsent.astro`](src/components/CookieConsent.astro) but never loads until a visitor clicks **Accept** on the cookie banner (shown once, on first visit). Declining — or never answering — means no analytics script and no analytics cookies are ever set.
+
+**`GA_MEASUREMENT_ID` is currently a placeholder (`G-XXXXXXXXXX`)** — this site intentionally does not reuse the English site's GA ID, since that would mix both sites' traffic into one property. Create a separate GA4 property/data stream for this site and paste its real measurement ID in before relying on analytics here.
+
+- To change the GA property, update `GA_MEASUREMENT_ID` at the top of that file.
+- To remove analytics entirely, delete the `<CookieConsent />` line from [`src/layouts/BaseLayout.astro`](src/layouts/BaseLayout.astro).
+- The visitor's choice is remembered in `localStorage` (not a cookie) so the banner doesn't reappear — a "Manage cookie preferences" link in the footer lets them reopen it and change their mind.
+- [`src/pages/privacy.astro`](src/pages/privacy.astro) explains what's collected — update it if you add other tracking or change what data you collect.
+
+## Legal pages
+
+[`privacy.astro`](src/pages/privacy.astro), [`terms.astro`](src/pages/terms.astro), and [`disclaimer.astro`](src/pages/disclaimer.astro) (all linked in the footer) are a reasonable starting point, not legal advice — laws like GDPR vary by where your visitors are, and this content hasn't been reviewed by a lawyer. Have someone qualified review them (and fill in a real jurisdiction/governing-law line in the Terms) before treating them as your actual legal footing, especially if the site handles anything beyond reading posts.
+
+## Customizing the look
+
+- Colors, fonts, and spacing all live in [`src/styles/global.css`](src/styles/global.css) as CSS variables at the top of the file.
+- Site name and tagline are set in [`src/components/Header.astro`](src/components/Header.astro).
+- The favicon is [`public/favicon.svg`](public/favicon.svg).
+
+## Deploying
+
+### Option A: Cloudflare Pages
+
+1. Push this project to a GitHub (or GitLab) repository.
+2. In the Cloudflare dashboard, go to **Workers & Pages → Create → Pages → Connect to Git** and select the repo.
+3. Build settings:
+   - Build command: `npm run build`
+   - Build output directory: `dist`
+4. Deploy. Cloudflare will rebuild automatically on every push.
+5. Leave `BASE_PATH` in `astro.config.mjs` as `"/"`.
+
+### Option B: GitHub Pages
+
+1. Push this project to a GitHub repository.
+2. In the repo, go to **Settings → Pages** and set **Source** to "GitHub Actions".
+3. This project already includes a workflow at [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) that builds and deploys automatically on every push to `main`.
+4. If your repo is a **project site** (URL like `https://username.github.io/repo-name`), open `astro.config.mjs` and set:
+   ```js
+   const BASE_PATH = "/repo-name";
+   ```
+   If it's a **user/org site** (repo named `username.github.io`), leave `BASE_PATH` as `"/"`.
+5. Also update `SITE_URL` in `astro.config.mjs` to your real GitHub Pages URL.
+
+## Project structure
+
+```
+src/
+  content/posts/       Blog posts (Markdown)
+  content/config.ts    Post frontmatter schema
+  components/          Header, Footer, PostCard, CookieConsent
+  layouts/             BaseLayout (shared shell), PostLayout (post pages)
+  pages/
+    index.astro         Homepage with Load More
+    about.astro         About page
+    contact.astro       Contact page
+    search.astro        Client-side search (no backend)
+    downloads.astro     Downloads page (lists files in public/downloads)
+    privacy.astro       Privacy policy
+    terms.astro         Terms of Service
+    disclaimer.astro    Disclaimer (not medical/religious advice, no guaranteed outcomes)
+    posts/[...slug].astro   Individual post pages
+  styles/global.css    All styling / theme variables
+public/
+  downloads/            Downloadable files (PDFs, etc.) — served as-is
+```
+
+## A note on content
+
+The included posts are placeholder reflections meant to demonstrate the layout. Before publishing, review and replace them with your own vetted content, and verify any religious references (Qur'an, hadith, rulings) against reliable sources.
