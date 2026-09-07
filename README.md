@@ -68,7 +68,7 @@ The four PDFs included are placeholder samples reused from the English site, so 
 
 Google Analytics is wired up in [`src/components/CookieConsent.astro`](src/components/CookieConsent.astro) but never loads until a visitor clicks **Accept** on the cookie banner (shown once, on first visit). Declining — or never answering — means no analytics script and no analytics cookies are ever set.
 
-**`GA_MEASUREMENT_ID` is currently a placeholder (`G-XXXXXXXXXX`)** — this site intentionally does not reuse the English site's GA ID, since that would mix both sites' traffic into one property. Create a separate GA4 property/data stream for this site and paste its real measurement ID in before relying on analytics here.
+This site uses its own GA4 property (stream "Noor And Knowledge BG", ID `G-CZCL24P20V`) — deliberately not the English site's ID, since reusing it would mix both sites' traffic into one property.
 
 - To change the GA property, update `GA_MEASUREMENT_ID` at the top of that file.
 - To remove analytics entirely, delete the `<CookieConsent />` line from [`src/layouts/BaseLayout.astro`](src/layouts/BaseLayout.astro).

@@ -1,8 +1,7 @@
 ---
-// This site is a fully separate property from the English site, so it needs its own
-// GA4 measurement ID — reusing the English one would mix both sites' traffic together.
-// Create a new GA4 property/data stream for this site and paste its ID here.
-const GA_MEASUREMENT_ID = "G-XXXXXXXXXX";
+// Separate GA4 property from the English site ("Noor And Knowledge BG" stream),
+// so this site's traffic never mixes with the English one's.
+const GA_MEASUREMENT_ID = "G-CZCL24P20V";
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 const privacyHref = `${base}/privacy`;
 ---
