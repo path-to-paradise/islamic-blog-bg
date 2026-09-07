@@ -305,6 +305,16 @@ img {
   color: var(--hs-text);
   font: inherit;
   font-size: 0.92rem;
+  line-height: normal;
+  padding: 0;
+  height: 22px;
+}
+
+.header-search input::-webkit-search-decoration,
+.header-search input::-webkit-search-cancel-button,
+.header-search input::-webkit-search-results-button,
+.header-search input::-webkit-search-results-decoration {
+  -webkit-appearance: none;
 }
 
 .header-search input::placeholder {
