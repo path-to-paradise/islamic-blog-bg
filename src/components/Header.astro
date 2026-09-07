@@ -50,7 +50,9 @@ const contactHref = `${base}/contact`;
       </div>
 
       <form class="header-search" action={searchHref} method="get" role="search">
-        <input type="search" name="q" placeholder="Търсене в публикациите…" aria-label="Търсене в публикациите" />
+        <div class="header-search-field">
+          <input type="search" name="q" placeholder="Търсене в публикациите…" aria-label="Търсене в публикациите" />
+        </div>
         <button type="submit" class="header-search-btn" aria-label="Търсене">
           <svg class="search-icon" viewBox="0 0 20 20" aria-hidden="true">
             <circle cx="9" cy="9" r="6.5" fill="none" stroke="currentColor" stroke-width="1.6" />

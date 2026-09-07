@@ -259,72 +259,45 @@ img {
 }
 
 .header-search {
+  display: flex;
+  align-items: stretch;
+  gap: 0.5rem;
+  width: 260px;
+  flex-shrink: 0;
+  transition: width 0.25s ease;
+}
+
+.header-search:focus-within {
+  width: 320px;
+}
+
+.header-search-field {
   --hs-text: #1c2b21;
   --hs-text-muted: #6b7a6f;
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  width: 240px;
-  flex-shrink: 0;
-  padding: 0.7rem 1.15rem;
+  flex: 1;
+  min-width: 0;
+  height: 40px;
+  padding: 0 0.9rem;
   background: #fdfcf8;
   border: 1px solid transparent;
   border-radius: var(--radius-sm);
   box-shadow: 0 1px 2px rgba(10, 58, 36, 0.12), 0 10px 24px -10px rgba(10, 58, 36, 0.45);
-  transition: width 0.25s ease, box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
 
-.header-search:hover {
+.header-search-field:hover {
   transform: translateY(-1px);
   box-shadow: 0 2px 4px rgba(10, 58, 36, 0.14), 0 14px 28px -10px rgba(10, 58, 36, 0.5);
 }
 
-.header-search:focus-within {
-  width: 300px;
+.header-search-field:focus-within {
   border-color: var(--color-accent);
   box-shadow: 0 0 0 4px rgba(184, 134, 11, 0.18), 0 14px 28px -10px rgba(10, 58, 36, 0.5);
 }
 
-.header-search-btn {
-  appearance: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  width: 28px;
-  height: 28px;
-  margin: -2px;
-  padding: 0;
-  border: none;
-  border-radius: 999px;
-  background: transparent;
-  color: var(--hs-text-muted);
-  cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
-}
-
-.header-search-btn:hover,
-.header-search-btn:focus-visible {
-  background: var(--color-accent-soft);
-  color: var(--color-primary-dark, var(--color-primary));
-}
-
-.header-search-btn:active {
-  transform: scale(0.92);
-}
-
-.header-search:focus-within .header-search-btn {
-  color: var(--color-accent);
-}
-
-.header-search .search-icon {
-  width: 17px;
-  height: 17px;
-  flex-shrink: 0;
-  pointer-events: none;
-}
-
-.header-search input {
+.header-search-field input {
   flex: 1;
   min-width: 0;
   border: none;
@@ -334,22 +307,64 @@ img {
   font-size: 0.92rem;
   line-height: normal;
   padding: 0;
-  height: 22px;
+  height: 100%;
 }
 
-.header-search input::-webkit-search-decoration,
-.header-search input::-webkit-search-cancel-button,
-.header-search input::-webkit-search-results-button,
-.header-search input::-webkit-search-results-decoration {
+.header-search-field input::-webkit-search-decoration,
+.header-search-field input::-webkit-search-cancel-button,
+.header-search-field input::-webkit-search-results-button,
+.header-search-field input::-webkit-search-results-decoration {
   -webkit-appearance: none;
 }
 
-.header-search input::placeholder {
+.header-search-field input::placeholder {
   color: var(--hs-text-muted);
 }
 
-.header-search input:focus {
+.header-search-field input:focus {
   outline: none;
+}
+
+/* The search button is deliberately its own separate, solid element - not tucked
+   inside the input's pill - so it reads clearly as its own clickable control. */
+.header-search-btn {
+  appearance: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: var(--color-accent);
+  color: var(--color-header-to);
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(10, 58, 36, 0.12), 0 6px 16px -6px rgba(10, 58, 36, 0.45);
+  transition: background 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.header-search-btn:hover {
+  background: #eccb6b;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(10, 58, 36, 0.14), 0 10px 20px -6px rgba(10, 58, 36, 0.5);
+}
+
+.header-search-btn:focus-visible {
+  outline: 2px solid #fdfcf8;
+  outline-offset: 2px;
+}
+
+.header-search-btn:active {
+  transform: translateY(0) scale(0.94);
+}
+
+.header-search .search-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  pointer-events: none;
 }
 
 @media (max-width: 720px) {
@@ -401,10 +416,13 @@ img {
     width: 100%;
   }
 
+  .header-search-field {
+    height: 44px;
+  }
+
   .header-search-btn {
-    width: 36px;
-    height: 36px;
-    margin: -4px -6px -4px 0;
+    width: 44px;
+    height: 44px;
   }
 }
 
@@ -441,23 +459,35 @@ main {
    background). Every child rule under .header-search keys off these same custom
    properties, so overriding them here is enough to re-theme the whole component. */
 .header-search--page {
-  --hs-text: var(--color-text);
-  --hs-text-muted: var(--color-text-muted);
   width: 100%;
   margin: 0.5rem 0 1rem;
+}
+
+.header-search--page:focus-within {
+  width: 100%;
+}
+
+.header-search--page .header-search-field {
+  --hs-text: var(--color-text);
+  --hs-text-muted: var(--color-text-muted);
+  height: 48px;
   background: var(--color-surface);
   border-color: var(--color-border);
   box-shadow: var(--shadow-xs);
 }
 
-.header-search--page:hover {
+.header-search--page .header-search-field:hover {
   transform: none;
   box-shadow: var(--shadow-xs);
 }
 
-.header-search--page:focus-within {
-  width: 100%;
+.header-search--page .header-search-field:focus-within {
   box-shadow: 0 0 0 4px var(--color-accent-soft);
+}
+
+.header-search--page .header-search-btn {
+  width: 48px;
+  height: 48px;
 }
 
 .search-status {

@@ -25,13 +25,15 @@ const searchIndex = posts.map((post) => ({
   <p class="search-intro">Търсете по заглавие, тема или етикет.</p>
 
   <form class="header-search header-search--page" id="page-search-form" role="search">
-    <input
-      type="search"
-      id="search-input"
-      placeholder="Търсене в публикациите…"
-      aria-label="Търсене в публикациите"
-      autocomplete="off"
-    />
+    <div class="header-search-field">
+      <input
+        type="search"
+        id="search-input"
+        placeholder="Търсене в публикациите…"
+        aria-label="Търсене в публикациите"
+        autocomplete="off"
+      />
+    </div>
     <button type="submit" class="header-search-btn" aria-label="Търсене">
       <svg class="search-icon" viewBox="0 0 20 20" aria-hidden="true">
         <circle cx="9" cy="9" r="6.5" fill="none" stroke="currentColor" stroke-width="1.6" />
